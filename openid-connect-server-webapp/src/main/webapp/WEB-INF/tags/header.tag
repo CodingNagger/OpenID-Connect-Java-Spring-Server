@@ -52,10 +52,24 @@
     	function setPageTitle(title) {
     		document.title = "${config.topbarTitle} - " + title;
     	}
+
+        function cleanObject(obj) {
+            if (obj === String(obj)) {
+                return obj.replace(/<.+>/, '');
+            }
+
+            if (obj instanceof Object) {
+                Object.keys(obj).map(function(key, index) {
+                    obj[key] = cleanObject(obj[key]);
+                });
+            }
+            
+            return obj;
+        }
     	
 		// get the info of the current user, if available (null otherwise)
     	function getUserInfo() {
-    		return ${fn:escapeXml(userInfoJson)};
+    		return cleanObject(${userInfoJson});
     	}
 		
 		// get the authorities of the current user, if available (null otherwise)
